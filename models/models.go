@@ -10,9 +10,13 @@ const (
 type Status int
 
 const (
-	Pending Status = iota
+	Pending Status = iota + 1
 	Active
 	Completed
+	Cancelled
+	Failed
+	Refunded
+	PartialRefunded
 )
 
 type Orders struct {
@@ -29,7 +33,7 @@ type Orders struct {
 
 // live and schedule orders here
 type ItemHistory struct {
-	ID       int    `json:"id"`
+	ID       int    `json:"id"` // incremental id
 	OrderID  string `json:"order_id"`
 	MealID   int    `json:"meal_id"`
 	MealName string `json:"meal_name"`
