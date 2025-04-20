@@ -23,7 +23,7 @@ func init() {
 	}
 }
 
-func GenerateOrderID() (uint64, error) {
+func GenerateID() (uint64, error) {
 	// Generate a new Snowflake ID
 	return sf.NextID()
 }

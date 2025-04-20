@@ -35,7 +35,7 @@ type Orders struct {
 // live and schedule orders here
 type ItemOrdered struct {
 	ID          uint64 `json:"id"` // incremental id
-	OrderID     string `json:"order_id"`
+	OrderID     uint64 `json:"order_id"`
 	MealID      string `json:"meal_id"`
 	MealName    string `json:"meal_name"`
 	Quantity    int    `json:"quantity"`

@@ -7,8 +7,9 @@ import (
 )
 
 type SQL interface {
-	PlaceOrder(ctx context.Context, order models.CreateOrder) error
-	CreateSubscription(ctx context.Context, subscription models.Subscribed) error
+	PlaceLiveOrder(ctx context.Context, order models.CreateOrder, liveOrder models.CreateLiveOrder) error
+	PlaceSubscriptionOrder(ctx context.Context, order models.CreateOrder, subscription models.CreateSubscription) error
+	StartOrder(ctx context.Context, order models.CreateLiveOrder, orderId uint64) error
 	GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscribed, error)
 	GetUserHistory(ctx context.Context, userID string) ([]models.OrderHistory, error)
 	GetUserHistoryByOrderID(ctx context.Context, orderID string) ([]models.ItemOrdered, error)

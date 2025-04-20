@@ -17,3 +17,15 @@ type CreateLiveOrder struct {
 	Veg      bool   `json:"veg"`
 	Price    int    `json:"price"`
 }
+
+type CreateSubscription struct {
+	MealCount                int    `json:"meal_count"`
+	RemainingMealCount       int    `json:"remaining_meal_count"`
+	RollOverCount            int    `json:"roll_over_count"` // number of meals that can be rolled over
+	BreakfastID              string `json:"breakfast_id"`
+	LunchID                  string `json:"lunch_id"`
+	DinnerID                 string `json:"dinner_id"`
+	BreakfastDeliveryAddress string `json:"breakfast_delivery_address"`
+	LunchDeliveryAddress     string `json:"lunch_delivery_address"`
+	DinnerDeliveryAddress    string `json:"dinner_delivery_address"`
+}
