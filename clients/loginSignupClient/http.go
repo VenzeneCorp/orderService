@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	loginsignupmodels "github.com/venzene/loginSignup/models"
+	loginsignupmodels "github.com/VenzeneCorp/loginSignup/models"
 )
 
 type Client struct {

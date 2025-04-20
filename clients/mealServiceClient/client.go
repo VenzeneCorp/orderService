@@ -3,7 +3,7 @@ package mealserviceclient
 import (
 	"context"
 
-	mealsSvcModels "github.com/venzene/mealService/models"
+	mealsSvcModels "github.com/VenzeneCorp/mealService/models"
 )
 
 type MealServiceClient interface {

@@ -1,4 +1,4 @@
-package vendoranalytics
+package vendorpostgresdb
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/VenzeneCorp/orderService/models"
 )
 
-type Repository interface {
+type SQL interface {
 	GetSubscriptionAnalytics(ctx context.Context, vendorID string) (models.SubscriptionAnalytics, error)
 	GetLiveOrderAnalytics(ctx context.Context, vendorID string) (models.LiveOrderAnalytics, error)
 	GetVendorDashboard(ctx context.Context, vendorID string) (models.VendorDashboard, error)

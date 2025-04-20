@@ -1,4 +1,4 @@
-package userhistory
+package postgresdb
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/VenzeneCorp/orderService/models"
 )
 
-type Repository interface {
+type SQL interface {
 	PlaceOrder(ctx context.Context, order models.Orders) error
 	GetSubscriptionInfo(ctx context.Context, userID int) (models.Subscribed, error)
 	GetUserHistory(ctx context.Context, userID int) ([]models.OrderHistory, error)

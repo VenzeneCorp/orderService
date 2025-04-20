@@ -1,8 +1,8 @@
 package models
 
 import (
-	loginSigupModels "github.com/venzene/loginSignup/models"
-	mealsSvcModels "github.com/venzene/mealService/models"
+	loginSigupModels "github.com/VenzeneCorp/loginSignup/models"
+	mealsSvcModels "github.com/VenzeneCorp/mealService/models"
 )
 
 type VendorDashboard struct {

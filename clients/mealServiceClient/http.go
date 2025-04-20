@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	mealsSvcModels "github.com/venzene/mealService/models"
+	mealsSvcModels "github.com/VenzeneCorp/mealService/models"
 )
 
 type Client struct {

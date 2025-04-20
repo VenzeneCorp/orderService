@@ -3,7 +3,7 @@ package loginsignupclient
 import (
 	"context"
 
-	loginsignupmodels "github.com/venzene/loginSignup/models"
+	loginsignupmodels "github.com/VenzeneCorp/loginSignup/models"
 )
 
 type LoginSignupClient interface {
