@@ -20,7 +20,7 @@ const (
 )
 
 type Orders struct {
-	ID          string    `json:"id"`
+	ID          uint64    `json:"id"`
 	UserID      int       `json:"user_id"`
 	VendorID    int       `json:"vendor_id"`
 	VendorName  string    `json:"vendor_name"`
@@ -28,15 +28,15 @@ type Orders struct {
 	Discount    int       `json:"discount"`
 	FinalAmount int       `json:"final_amount"`
 	OrderType   OrderType `json:"order_type"`
-	Status      string    `json:"status"`
-	CreatedAt   string    `json:"created_at"`
+	Status      Status    `json:"status"`
+	CreatedAt   int64     `json:"created_at"`
 }
 
 // live and schedule orders here
-type ItemHistory struct {
-	ID          int    `json:"id"` // incremental id
+type ItemOrdered struct {
+	ID          uint64 `json:"id"` // incremental id
 	OrderID     string `json:"order_id"`
-	MealID      int    `json:"meal_id"`
+	MealID      string `json:"meal_id"`
 	MealName    string `json:"meal_name"`
 	Quantity    int    `json:"quantity"`
 	Veg         bool   `json:"veg"`

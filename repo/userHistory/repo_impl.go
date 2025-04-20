@@ -17,7 +17,7 @@ func NewUserHistoryRepo(db *postgresdb.SQL) Repository {
 	}
 }
 
-func (r *UserHistoryRepo) PlaceOrder(ctx context.Context, order models.Orders) error {
+func (r *UserHistoryRepo) PlaceLiveOrder(ctx context.Context, order models.CreateOrder) error {
 	return r.sqlDB.PlaceOrder(ctx, order)
 }
 
@@ -29,6 +29,6 @@ func (r *UserHistoryRepo) GetUserHistory(ctx context.Context, userID string) ([]
 	return r.sqlDB.GetUserHistory(ctx, userID)
 }
 
-func (r *UserHistoryRepo) GetUserHistoryByOrderID(ctx context.Context, orderID string) ([]models.ItemHistory, error) {
+func (r *UserHistoryRepo) GetUserHistoryByOrderID(ctx context.Context, orderID string) ([]models.ItemOrdered, error) {
 	return r.sqlDB.GetUserHistoryByOrderID(ctx, orderID)
 }
