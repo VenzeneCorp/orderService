@@ -1,10 +1,5 @@
 package models
 
-import (
-	loginSignupModels "github.com/venzene/loginSignup/models"
-	mealSvcModels "github.com/venzene/mealService/models"
-)
-
 type OrderHistory struct {
 	OrderID    string  `json:"order_id"`
 	Meals      []Meals `json:"meals"`
@@ -22,13 +17,29 @@ type Meals struct {
 }
 
 type SubscriptionHistory struct {
-	ID                       int                       `json:"id"`
-	RemainingMeals           int                       `json:"remaining_meals"`
-	RollOverCount            int                       `json:"roll_over_count"`
-	BreakfastID              mealSvcModels.MealPlan    `json:"breakfast_id"`
-	LunchID                  mealSvcModels.MealPlan    `json:"lunch_id"`
-	DinnerID                 mealSvcModels.MealPlan    `json:"dinner_id"`
-	BreakfastDeliveryAddress loginSignupModels.Address `json:"breakfast_delivery_address"`
-	LunchDeliveryAddress     loginSignupModels.Address `json:"lunch_delivery_address"`
-	DinnerDeliveryAddress    loginSignupModels.Address `json:"dinner_delivery_address"`
+	ID                       int           `json:"id"`
+	RemainingMeals           int           `json:"remaining_meals"`
+	RollOverCount            int           `json:"roll_over_count"`
+	BreakfastID              MealPlanInfo  `json:"breakfast_id"`
+	LunchID                  MealPlanInfo  `json:"lunch_id"`
+	DinnerID                 MealPlanInfo  `json:"dinner_id"`
+	BreakfastDeliveryAddress UserAddresses `json:"breakfast_delivery_address"`
+	LunchDeliveryAddress     UserAddresses `json:"lunch_delivery_address"`
+	DinnerDeliveryAddress    UserAddresses `json:"dinner_delivery_address"`
+}
+
+// get this from mealService
+type MealPlanInfo struct {
+	MealPlanID     int    `json:"meal_plan_id"`
+	MealPlanName   string `json:"meal_plan_name"`
+	RestaurantName string `json:"restaurant_name"`
+	Veg            bool   `json:"veg"`
+	Description    string `json:"description"`
+	ImageURL       string `json:"image_url"`
+}
+
+// get this from loginSignupService
+type UserAddresses struct {
+	AddressID   int    `json:"address_id"`
+	AddressName string `json:"address_name"`
 }

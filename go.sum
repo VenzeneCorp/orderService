@@ -1,4 +1,4 @@
 github.com/venzene/loginSignup v0.0.0-20250417184840-1fa6a9c83eb9 h1:RMnO5wETBFIwPYX4E8t+leMOvE7Tu7Wq/tUXMqECDng=
 github.com/venzene/loginSignup v0.0.0-20250417184840-1fa6a9c83eb9/go.mod h1:V5Sfr64fBTn65vGWDubrmgHqC3W7ghDeZRTJsO/qdZU=
-github.com/venzene/mealService v0.0.0-20250410192045-0d686a42bcc6 h1:gXkxI4mDoxU05C2AMcq8T5yGFxC43ZWqTAiovTU1fpY=
-github.com/venzene/mealService v0.0.0-20250410192045-0d686a42bcc6/go.mod h1:kUfOsa5otuJK3mcKeVwr3iZsFeiU1AXOKHDQv/GfLy4=
+github.com/venzene/mealService v0.0.0-20250420101711-d9c1814a5d65 h1:++86hHTXrxtGUAaivHBxo7TIDw9N6l4UAJFP569zHpc=
+github.com/venzene/mealService v0.0.0-20250420101711-d9c1814a5d65/go.mod h1:2JJQui18dwarT/83Owen7pcNurPXZceAwzsCqHOmSQM=

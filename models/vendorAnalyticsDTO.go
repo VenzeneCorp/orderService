@@ -19,9 +19,9 @@ type DeliveryDetails struct {
 }
 
 type MealsToDeliver struct {
-	MealID   string              `json:"meal_id"`
-	Meal     mealsSvcModels.Meal `json:"meal"`
-	Quantity int                 `json:"quantity"`
+	MealID   string `json:"meal_id"`
+	MealName string `json:"meal_name"`
+	Quantity int    `json:"quantity"`
 }
 
 type SubscriptionAnalytics struct {
@@ -30,10 +30,10 @@ type SubscriptionAnalytics struct {
 }
 
 type PopularMealPlan struct {
-	MealPlanID         int                               `json:"plan_id"`
-	MealPlanDetails    []mealsSvcModels.ResponseMealPlan `json:"plan_details"`
-	TotalSubscriptions int                               `json:"total_subscriptions"`
-	TotalSales         float64                           `json:"total_sales"`
+	MealPlanID         string  `json:"plan_id"`
+	MealPlanName       string  `json:"plan_name"`
+	TotalSubscriptions int     `json:"total_subscriptions"`
+	TotalSales         float64 `json:"total_sales"`
 }
 
 type LiveOrderAnalytics struct {
@@ -53,9 +53,8 @@ type SalesAnalytics struct {
 }
 
 type ProductAnalytics struct {
-	MealID      string              `json:"meal_id"`
-	Meal        mealsSvcModels.Meal `json:"meal"`
-	TotalSales  float64             `json:"total_sales"`
-	TotalOrders int                 `json:"total_orders"`
-	
+	MealID      string  `json:"meal_id"`
+	MealName    string  `json:"meal_name"`
+	TotalSales  float64 `json:"total_sales"`
+	TotalOrders int     `json:"total_orders"`
 }
