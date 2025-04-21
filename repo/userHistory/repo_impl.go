@@ -29,10 +29,10 @@ func (r *UserHistoryRepo) GetSubscriptionInfo(ctx context.Context, userID string
 	return r.sqlDB.GetSubscriptionInfo(ctx, userID)
 }
 
-func (r *UserHistoryRepo) GetUserHistory(ctx context.Context, userID string) ([]models.OrderHistory, error) {
+func (r *UserHistoryRepo) GetUserHistory(ctx context.Context, userID string) ([]models.ItemOrdered, error) {
 	return r.sqlDB.GetUserHistory(ctx, userID)
 }
 
-func (r *UserHistoryRepo) GetUserHistoryByOrderID(ctx context.Context, orderID string) ([]models.ItemOrdered, error) {
-	return r.sqlDB.GetUserHistoryByOrderID(ctx, orderID)
+func (r *UserHistoryRepo) GetUserSubscriptionHistory(ctx context.Context, userID string) ([]models.ItemOrdered, error) {
+	return r.sqlDB.GetUserSubscriptionHistory(ctx, userID)
 }

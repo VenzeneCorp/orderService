@@ -1,11 +1,12 @@
 package models
 
 type Subscribed struct {
-	ID                       int    `json:"id"` // incremental id
-	OrderID                  string `json:"order_id"`
+	ID                       uint64 `json:"id"`
+	OrderID                  uint64 `json:"order_id"`
+	Status                   Status `json:"status"`
 	MealCount                int    `json:"meal_count"`
 	RemainingMealCount       int    `json:"remaining_meal_count"`
-	RollOverCount            int    `json:"roll_over_count"` // number of meals that can be rolled over
+	RollOverCount            int    `json:"roll_over_count"`
 	BreakfastID              string `json:"breakfast_id"`
 	LunchID                  string `json:"lunch_id"`
 	DinnerID                 string `json:"dinner_id"`

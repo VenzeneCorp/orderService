@@ -3,7 +3,7 @@ package models
 type OrderType int
 
 const (
-	LiveOrder OrderType = iota
+	LiveOrder OrderType = iota + 1
 	SubscriptionOrder
 )
 
@@ -28,18 +28,19 @@ type Orders struct {
 	Discount    int       `json:"discount"`
 	FinalAmount int       `json:"final_amount"`
 	OrderType   OrderType `json:"order_type"`
-	Status      Status    `json:"status"`
 	CreatedAt   int64     `json:"created_at"`
 }
 
 // live and schedule orders here
 type ItemOrdered struct {
-	ID          uint64 `json:"id"` // incremental id
-	OrderID     uint64 `json:"order_id"`
-	MealID      string `json:"meal_id"`
-	MealName    string `json:"meal_name"`
-	Quantity    int    `json:"quantity"`
-	Veg         bool   `json:"veg"`
-	Price       int    `json:"price"`
-	DeliveredAt int64  `json:"delivered_at"`
+	ID          uint64    `json:"id"`
+	OrderID     uint64    `json:"order_id"`
+	OrderType   OrderType `json:"order_type"`
+	MealID      string    `json:"meal_id"`
+	MealName    string    `json:"meal_name"`
+	Quantity    int       `json:"quantity"`
+	Veg         bool      `json:"veg"`
+	Price       int       `json:"price"`
+	Status      Status    `json:"status"`
+	DeliveredAt *int64     `json:"delivered_at"`
 }
