@@ -21,6 +21,10 @@ func (r *VendorAnalyticsRepo) GetSubscriptionAnalytics(ctx context.Context, vend
 	return r.sqlDB.GetSubscriptionAnalytics(ctx, vendorID)
 }
 
+func (r *VendorAnalyticsRepo) GetScheduledOrders(ctx context.Context, vendorID string) ([]models.ScheduledOrder, error) {
+	return r.sqlDB.GetScheduledOrders(ctx, vendorID)
+}
+
 func (r *VendorAnalyticsRepo) GetLiveOrderAnalytics(ctx context.Context, vendorID string) (models.LiveOrderAnalytics, error) {
 	return r.sqlDB.GetLiveOrderAnalytics(ctx, vendorID)
 }
@@ -31,20 +35,4 @@ func (r *VendorAnalyticsRepo) GetVendorDashboard(ctx context.Context, vendorID s
 
 func (r *VendorAnalyticsRepo) GetSalesAnalyticsByPeriod(ctx context.Context, vendorID string, period string) (models.SalesAnalytics, error) {
 	return r.sqlDB.GetSalesAnalyticsByPeriod(ctx, vendorID, period)
-}
-
-func (r *VendorAnalyticsRepo) GetTopSellingProducts(ctx context.Context, vendorID string, limit int) ([]models.ProductAnalytics, error) {
-	return r.sqlDB.GetTopSellingProducts(ctx, vendorID, limit)
-}
-
-func (r *VendorAnalyticsRepo) GetRevenueByCategory(ctx context.Context, vendorID string) (map[string]float64, error) {
-	return r.sqlDB.GetRevenueByCategory(ctx, vendorID)
-}
-
-func (r *VendorAnalyticsRepo) UpdateAnalyticsCache(ctx context.Context, vendorID string) error {
-	return r.sqlDB.UpdateAnalyticsCache(ctx, vendorID)
-}
-
-func (r *VendorAnalyticsRepo) GetInventoryTurnoverRate(ctx context.Context, vendorID string) (float64, error) {
-	return r.sqlDB.GetInventoryTurnoverRate(ctx, vendorID)
 }

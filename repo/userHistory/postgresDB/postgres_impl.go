@@ -19,8 +19,7 @@ func NewRepository(db *gorm.DB) SQL {
 	}
 }
 
-func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrder, liveOrder models.CreateLiveOrder) error {
-
+func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrder, liveOrders []models.CreateLiveOrder) error {
 	return p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		orderId, err := utils.GenerateID()
 		if err != nil {
@@ -38,6 +37,7 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrde
 			Discount:    order.Discount,
 			FinalAmount: order.FinalAmount,
 			OrderType:   order.OrderType,
+			OrderStatus: models.OrderCreated,
 			CreatedAt:   timeInSec,
 		}
 
@@ -45,25 +45,32 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrde
 			return err
 		}
 
-		newID, err := utils.GenerateID()
-		if err != nil {
-			return err
+		var items []models.ItemOrdered
+
+		for _, lo := range liveOrders {
+			itemID, err := utils.GenerateID()
+			if err != nil {
+				return err
+			}
+
+			item := models.ItemOrdered{
+				ID:          itemID,
+				OrderID:     orderId,
+				OrderType:   models.LiveOrder,
+				MealID:      lo.MealID,
+				MealName:    lo.MealName,
+				Quantity:    lo.Quantity,
+				Veg:         lo.Veg,
+				Price:       lo.Price,
+				DeliveredAt: nil,
+			}
+			items = append(items, item)
 		}
 
-		newLiveOrder := models.ItemOrdered{
-			ID:          newID,
-			OrderID:     orderId,
-			OrderType:   models.LiveOrder,
-			MealID:      liveOrder.MealID,
-			MealName:    liveOrder.MealName,
-			Quantity:    liveOrder.Quantity,
-			Veg:         liveOrder.Veg,
-			Price:       liveOrder.Price,
-			DeliveredAt: nil,
-		}
-
-		if err := tx.Create(&newLiveOrder).Error; err != nil {
-			return err
+		if len(items) > 0 {
+			if err := tx.Create(&items).Error; err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -125,6 +132,17 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, order models.Cr
 	})
 }
 
+func (p *Repository) CancelOrder(ctx context.Context, orderID string) error {
+	err := p.DB.WithContext(ctx).
+		Model(&models.Orders{}).
+		Where("id = ?", orderID).
+		Update("order_status", models.Cancelled).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *Repository) StartOrder(ctx context.Context, order models.CreateLiveOrder, orderId uint64) error {
 
 	newID, err := utils.GenerateID()
@@ -132,18 +150,15 @@ func (p *Repository) StartOrder(ctx context.Context, order models.CreateLiveOrde
 		return err
 	}
 
-	deliveredAt := time.Now().Unix()
-
 	newOrder := models.ItemOrdered{
-		ID:          newID,
-		OrderID:     orderId,
-		OrderType:   models.SubscriptionOrder,
-		MealID:      order.MealID,
-		MealName:    order.MealName,
-		Quantity:    order.Quantity,
-		Veg:         order.Veg,
-		Price:       order.Price,
-		DeliveredAt: &deliveredAt,
+		ID:        newID,
+		OrderID:   orderId,
+		OrderType: models.SubscriptionOrder,
+		MealID:    order.MealID,
+		MealName:  order.MealName,
+		Quantity:  order.Quantity,
+		Veg:       order.Veg,
+		Price:     order.Price,
 	}
 
 	err = p.DB.WithContext(ctx).Create(&newOrder).Error
@@ -179,11 +194,22 @@ func (p *Repository) DeliverOrder(ctx context.Context, orderId uint64) error {
 			subscription.RemainingMealCount--
 			subscription.UpdatedAt = deliveryTime
 
-			if err := tx.Save(&subscription).Error; err != nil {
-				return err
+			if subscription.RemainingMealCount == 0 {
+				subscription.Status = models.Completed
+				if err := tx.Save(&subscription).Error; err != nil {
+					return err
+				}
+				if err := tx.Model(&models.Orders{}).
+					Where("id = ?", orderItem.OrderID).
+					Update("order_status", models.Completed).Error; err != nil {
+					return err
+				}
+			} else {
+				if err := tx.Save(&subscription).Error; err != nil {
+					return err
+				}
 			}
 		}
-
 		return nil
 	})
 }
