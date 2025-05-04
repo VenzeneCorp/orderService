@@ -108,7 +108,7 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, order models.Cr
 			return err
 		}
 
-		newSubscription := models.Subscribed{
+		newSubscription := models.Subscription{
 			ID:                       subscriptionId,
 			OrderID:                  orderId,
 			MealCount:                subscription.MealCount,
@@ -187,7 +187,7 @@ func (p *Repository) DeliverOrder(ctx context.Context, orderId uint64) error {
 		}
 
 		if orderItem.OrderType == models.SubscriptionOrder {
-			subscription := models.Subscribed{}
+			subscription := models.Subscription{}
 			if err := tx.Where("order_id = ?", orderItem.OrderID).First(&subscription).Error; err != nil {
 				return err
 			}
@@ -214,11 +214,11 @@ func (p *Repository) DeliverOrder(ctx context.Context, orderId uint64) error {
 	})
 }
 
-func (p *Repository) GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscribed, error) {
-	subscription := models.Subscribed{}
+func (p *Repository) GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscription, error) {
+	subscription := models.Subscription{}
 	err := p.DB.WithContext(ctx).Where("user_id = ?", userID).First(&subscription).Error
 	if err != nil {
-		return models.Subscribed{}, err
+		return models.Subscription{}, err
 	}
 	return subscription, nil
 }

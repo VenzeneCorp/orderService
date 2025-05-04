@@ -15,7 +15,7 @@ type SQL interface {
 	StartOrder(ctx context.Context, order models.CreateLiveOrder, orderId uint64) error
 	DeliverOrder(ctx context.Context, orderId uint64) error
 
-	GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscribed, error)
+	GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscription, error)
 	GetUserHistory(ctx context.Context, userID string) ([]models.ItemOrdered, error)
 	GetUserSubscriptionHistory(ctx context.Context, userID string) ([]models.ItemOrdered, error)
 }

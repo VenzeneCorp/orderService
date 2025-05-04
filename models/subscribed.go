@@ -1,6 +1,6 @@
 package models
 
-type Subscribed struct {
+type Subscription struct {
 	ID                       uint64 `json:"id"`
 	OrderID                  uint64 `json:"order_id"`
 	Status                   Status `json:"status"`

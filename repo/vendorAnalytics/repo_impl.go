@@ -17,22 +17,18 @@ func NewVendorAnalyticsRepo(db *vendorpostgresdb.SQL) Repository {
 	}
 }
 
-func (r *VendorAnalyticsRepo) GetSubscriptionAnalytics(ctx context.Context, vendorID string) (models.SubscriptionAnalytics, error) {
-	return r.sqlDB.GetSubscriptionAnalytics(ctx, vendorID)
+func (r *VendorAnalyticsRepo) GetSubscription(ctx context.Context, vendorID string) ([]models.Subscription, error) {
+	return r.sqlDB.GetSubscription(ctx, vendorID)
 }
 
-func (r *VendorAnalyticsRepo) GetScheduledOrders(ctx context.Context, vendorID string) ([]models.ScheduledOrder, error) {
+func (r *VendorAnalyticsRepo) GetScheduledOrders(ctx context.Context, vendorID string) ([]models.ItemOrdered, error) {
 	return r.sqlDB.GetScheduledOrders(ctx, vendorID)
 }
 
-func (r *VendorAnalyticsRepo) GetLiveOrderAnalytics(ctx context.Context, vendorID string) (models.LiveOrderAnalytics, error) {
-	return r.sqlDB.GetLiveOrderAnalytics(ctx, vendorID)
+func (r *VendorAnalyticsRepo) GetLiveOrder(ctx context.Context, vendorID string) ([]models.ItemOrdered, error) {
+	return r.sqlDB.GetLiveOrder(ctx, vendorID)
 }
 
-func (r *VendorAnalyticsRepo) GetVendorDashboard(ctx context.Context, vendorID string) (models.VendorDashboard, error) {
-	return r.sqlDB.GetVendorDashboard(ctx, vendorID)
-}
-
-func (r *VendorAnalyticsRepo) GetSalesAnalyticsByPeriod(ctx context.Context, vendorID string, period string) (models.SalesAnalytics, error) {
-	return r.sqlDB.GetSalesAnalyticsByPeriod(ctx, vendorID, period)
+func (r *VendorAnalyticsRepo) GetSalesByPeriod(ctx context.Context, vendorID string, period int) ([]models.Orders, error) {
+	return r.sqlDB.GetSalesByPeriod(ctx, vendorID, period)
 }

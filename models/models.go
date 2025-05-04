@@ -19,12 +19,8 @@ type Status int
 
 const (
 	Pending Status = iota + 1
-	Active
 	Completed
 	Cancelled
-	Failed
-	Refunded
-	PartialRefunded
 )
 
 type Orders struct {

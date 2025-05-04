@@ -7,9 +7,8 @@ import (
 )
 
 type SQL interface {
-	GetSubscriptionAnalytics(ctx context.Context, vendorID string) (models.SubscriptionAnalytics, error)
-	GetScheduledOrders(ctx context.Context, vendorID string) ([]models.ScheduledOrder, error)
-	GetLiveOrderAnalytics(ctx context.Context, vendorID string) (models.LiveOrderAnalytics, error)
-	GetVendorDashboard(ctx context.Context, vendorID string) (models.VendorDashboard, error)
-	GetSalesAnalyticsByPeriod(ctx context.Context, vendorID string, period string) (models.SalesAnalytics, error)
+	GetSubscription(ctx context.Context, vendorID string) ([]models.Subscription, error)
+	GetScheduledOrders(ctx context.Context, vendorID string) ([]models.ItemOrdered, error)
+	GetLiveOrder(ctx context.Context, vendorID string) ([]models.ItemOrdered, error)
+	GetSalesByPeriod(ctx context.Context, vendorID string, period int) ([]models.Orders, error)
 }

@@ -30,7 +30,7 @@ func (r *UserHistoryRepo) CancelOrder(ctx context.Context, orderID string) error
 	return r.sqlDB.CancelOrder(ctx, orderID)
 }
 
-func (r *UserHistoryRepo) GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscribed, error) {
+func (r *UserHistoryRepo) GetSubscriptionInfo(ctx context.Context, userID string) (models.Subscription, error) {
 	return r.sqlDB.GetSubscriptionInfo(ctx, userID)
 }
 
