@@ -13,6 +13,7 @@ import (
 
 	// loginsignupclient "github.com/VenzeneCorp/orderService/clients/loginSignupClient"
 	// mealserviceclient "github.com/VenzeneCorp/orderService/clients/mealServiceClient"
+	"github.com/VenzeneCorp/orderService/middlewares"
 	"github.com/VenzeneCorp/orderService/models"
 	orderhistory "github.com/VenzeneCorp/orderService/repo/orderHistory"
 	postgresdb "github.com/VenzeneCorp/orderService/repo/orderHistory/postgresDB"
@@ -65,6 +66,9 @@ func main() {
 	apiRouter := router.PathPrefix("/api/v1").Subrouter()
 	orderHandler.RegisterRoutes(apiRouter)
 	vendorHandler.RegisterRoutes(apiRouter)
+
+	// Middleware for CORS
+	router.Use(middlewares.CorsMiddleware)
 
 	// Create HTTP server
 	server := &http.Server{

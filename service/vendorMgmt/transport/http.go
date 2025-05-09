@@ -5,9 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/VenzeneCorp/orderService/service/vendorMgmt"
+	"github.com/VenzeneCorp/orderService/middlewares"
+	vendormgmt "github.com/VenzeneCorp/orderService/service/vendorMgmt"
 	"github.com/gorilla/mux"
 )
+
+var RoleUser = "user"
+var RoleVendor = "vendor"
+var RoleAdmin = "admin"
 
 type Handler struct {
 	service vendormgmt.Service
@@ -18,6 +23,8 @@ func NewHandler(service vendormgmt.Service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
+	router.Use(middlewares.AuthMiddleware)
+
 	router.HandleFunc("/vendor/subscriptions", h.GetSubscriptions).Methods(http.MethodGet)
 	router.HandleFunc("/vendor/scheduled-orders", h.GetScheduledOrders).Methods(http.MethodGet)
 	router.HandleFunc("/vendor/live-orders", h.GetLiveOrders).Methods(http.MethodGet)
@@ -25,11 +32,11 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) GetSubscriptions(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.Header.Get("X-Vendor-ID")
+	vendorID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
 
-	if vendorID == "" || role == "" {
-		http.Error(w, "Missing vendorID or role in headers", http.StatusBadRequest)
+	if vendorID == "" || (role == "" || (role != RoleVendor && role != RoleAdmin)) {
+		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 
@@ -44,11 +51,11 @@ func (h *Handler) GetSubscriptions(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetScheduledOrders(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.Header.Get("X-Vendor-ID")
+	vendorID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
 
-	if vendorID == "" || role == "" {
-		http.Error(w, "Missing vendorID or role in headers", http.StatusBadRequest)
+	if vendorID == "" || (role == "" || (role != RoleVendor && role != RoleAdmin)) {
+		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 
@@ -63,11 +70,11 @@ func (h *Handler) GetScheduledOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetLiveOrders(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.Header.Get("X-Vendor-ID")
+	vendorID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
 
-	if vendorID == "" || role == "" {
-		http.Error(w, "Missing vendorID or role in headers", http.StatusBadRequest)
+	if vendorID == "" || (role == "" || (role != RoleVendor && role != RoleAdmin)) {
+		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 
@@ -82,11 +89,11 @@ func (h *Handler) GetLiveOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetSalesByPeriod(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.Header.Get("X-Vendor-ID")
+	vendorID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
 
-	if vendorID == "" || role == "" {
-		http.Error(w, "Missing vendorID or role in headers", http.StatusBadRequest)
+	if vendorID == "" || (role == "" || (role != RoleVendor && role != RoleAdmin)) {
+		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 

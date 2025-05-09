@@ -4,10 +4,15 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/VenzeneCorp/orderService/middlewares"
 	"github.com/VenzeneCorp/orderService/models"
-	"github.com/VenzeneCorp/orderService/service/orderMgmt"
+	ordermgmt "github.com/VenzeneCorp/orderService/service/orderMgmt"
 	"github.com/gorilla/mux"
 )
+
+var RoleUser = "user"
+var RoleVendor = "vendor"
+var RoleAdmin = "admin"
 
 type Handler struct {
 	service ordermgmt.Service
@@ -18,6 +23,8 @@ func NewHandler(service ordermgmt.Service) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
+	router.Use(middlewares.AuthMiddleware)
+
 	router.HandleFunc("/orders/live", h.PlaceLiveOrder).Methods(http.MethodPost)
 	router.HandleFunc("/orders/subscription", h.PlaceSubscriptionOrder).Methods(http.MethodPost)
 	router.HandleFunc("/orders/cancel", h.CancelOrder).Methods(http.MethodPost)
@@ -26,16 +33,16 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/subscriptions/history", h.GetUserSubscriptionHistory).Methods(http.MethodGet)
 }
 func (h *Handler) PlaceLiveOrder(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 
 	var req struct {
-		Order     models.CreateOrder      `json:"order"`
+		Order     models.CreateOrder       `json:"order"`
 		LiveOrder []models.CreateLiveOrder `json:"live_order"`
 	}
 
@@ -53,16 +60,16 @@ func (h *Handler) PlaceLiveOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) PlaceSubscriptionOrder(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
 
 	var req struct {
-		Order        models.CreateOrder      `json:"order"`
+		Order        models.CreateOrder        `json:"order"`
 		Subscription models.CreateSubscription `json:"subscription"`
 	}
 
@@ -80,10 +87,10 @@ func (h *Handler) PlaceSubscriptionOrder(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *Handler) CancelOrder(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
@@ -111,10 +118,10 @@ func (h *Handler) CancelOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetSubscriptionInfo(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
@@ -130,10 +137,10 @@ func (h *Handler) GetSubscriptionInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserHistory(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
@@ -149,10 +156,10 @@ func (h *Handler) GetUserHistory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserSubscriptionHistory(w http.ResponseWriter, r *http.Request) {
-	userID := r.Header.Get("X-User-ID")
-	role := r.Header.Get("X-User-Role")
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
 
-	if userID == "" || role == "" {
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
 		http.Error(w, "Missing userID or role", http.StatusBadRequest)
 		return
 	}
