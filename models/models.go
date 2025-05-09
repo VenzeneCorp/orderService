@@ -25,7 +25,7 @@ const (
 
 type Orders struct {
 	ID          uint64      `json:"id"`
-	UserID      int         `json:"user_id"`
+	UserID      string      `json:"user_id"`
 	VendorID    int         `json:"vendor_id"`
 	VendorName  string      `json:"vendor_name"`
 	Amount      int         `json:"amount"`

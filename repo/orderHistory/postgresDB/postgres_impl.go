@@ -19,7 +19,7 @@ func NewRepository(db *gorm.DB) SQL {
 	}
 }
 
-func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrder, liveOrders []models.CreateLiveOrder) error {
+func (p *Repository) PlaceLiveOrder(ctx context.Context, userID string, order models.CreateOrder, liveOrders []models.CreateLiveOrder) error {
 	return p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		orderId, err := utils.GenerateID()
 		if err != nil {
@@ -30,7 +30,7 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrde
 
 		newOrder := models.Orders{
 			ID:          orderId,
-			UserID:      order.UserID,
+			UserID:      userID,
 			VendorID:    order.VendorID,
 			VendorName:  order.VendorName,
 			Amount:      order.Amount,
@@ -77,7 +77,7 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, order models.CreateOrde
 	})
 }
 
-func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, order models.CreateOrder, subscription models.CreateSubscription) error {
+func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, userID string, order models.CreateOrder, subscription models.CreateSubscription) error {
 
 	return p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		orderId, err := utils.GenerateID()
@@ -89,7 +89,7 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, order models.Cr
 
 		newOrder := models.Orders{
 			ID:          orderId,
-			UserID:      order.UserID,
+			UserID:      userID,
 			VendorID:    order.VendorID,
 			VendorName:  order.VendorName,
 			Amount:      order.Amount,
@@ -132,7 +132,7 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, order models.Cr
 	})
 }
 
-func (p *Repository) CancelOrder(ctx context.Context, orderID string) error {
+func (p *Repository) CancelOrder(ctx context.Context, userID string, orderID string) error {
 	err := p.DB.WithContext(ctx).
 		Model(&models.Orders{}).
 		Where("id = ?", orderID).

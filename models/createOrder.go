@@ -1,7 +1,6 @@
 package models
 
 type CreateOrder struct {
-	UserID      int       `json:"user_id"`
 	VendorID    int       `json:"vendor_id"`
 	VendorName  string    `json:"vendor_name"`
 	Amount      int       `json:"amount"`
