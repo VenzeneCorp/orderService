@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/VenzeneCorp/orderService/models"
-	postgresdb "github.com/VenzeneCorp/orderService/repo/userHistory/postgresDB"
+	postgresdb "github.com/VenzeneCorp/orderService/repo/orderHistory/postgresDB"
 )
 
 type UserHistoryRepo struct {
