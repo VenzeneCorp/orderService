@@ -26,12 +26,14 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.Use(middlewares.AuthMiddleware)
 
 	router.HandleFunc("/orders/live", h.PlaceLiveOrder).Methods(http.MethodPost)
+	router.HandleFunc("/orders/update", h.UpdateOrderStatus).Methods(http.MethodPost)
 	router.HandleFunc("/orders/subscription", h.PlaceSubscriptionOrder).Methods(http.MethodPost)
 	router.HandleFunc("/orders/cancel", h.CancelOrder).Methods(http.MethodPost)
 	router.HandleFunc("/subscriptions", h.GetSubscriptionInfo).Methods(http.MethodGet)
 	router.HandleFunc("/orders/history", h.GetUserHistory).Methods(http.MethodGet)
 	router.HandleFunc("/subscriptions/history", h.GetUserSubscriptionHistory).Methods(http.MethodGet)
 }
+
 func (h *Handler) PlaceLiveOrder(w http.ResponseWriter, r *http.Request) {
 	userID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
@@ -51,14 +53,42 @@ func (h *Handler) PlaceLiveOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.PlaceLiveOrder(r.Context(), userID, req.Order, req.LiveOrder); err != nil {
+	razorpayPayments, err := h.service.PlaceLiveOrder(r.Context(), userID, req.Order, req.LiveOrder)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(razorpayPayments)
+
 	w.WriteHeader(http.StatusCreated)
 }
 
+func (h *Handler) UpdateOrderStatus(w http.ResponseWriter, r *http.Request) {
+	userID := r.Header.Get("X-ID")
+	role := r.Header.Get("X-Role")
+	if userID == "" || (role == "" || (role != RoleUser && role != RoleAdmin)) {
+		http.Error(w, "Missing userID or role", http.StatusBadRequest)
+		return
+	}
+	var req struct {
+		OrderID       string                        `json:"order_id"`
+		SuccessObject models.RazorpaySuccessRequest `json:"success_object"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.service.UpdateOrderStatus(r.Context(), userID, req.OrderID, req.SuccessObject); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
 func (h *Handler) PlaceSubscriptionOrder(w http.ResponseWriter, r *http.Request) {
 	userID := r.Header.Get("X-ID")
 	role := r.Header.Get("X-Role")
@@ -78,10 +108,14 @@ func (h *Handler) PlaceSubscriptionOrder(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := h.service.PlaceSubscriptionOrder(r.Context(), userID, req.Order, req.Subscription); err != nil {
+	razorpayPayments, err := h.service.PlaceSubscriptionOrder(r.Context(), userID, req.Order, req.Subscription)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(razorpayPayments)
 
 	w.WriteHeader(http.StatusCreated)
 }

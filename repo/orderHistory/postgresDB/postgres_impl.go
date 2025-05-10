@@ -19,8 +19,10 @@ func NewRepository(db *gorm.DB) SQL {
 	}
 }
 
-func (p *Repository) PlaceLiveOrder(ctx context.Context, userID string, order models.CreateOrder, liveOrders []models.CreateLiveOrder) error {
-	return p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+func (p *Repository) PlaceLiveOrder(ctx context.Context, userID string, order models.CreateOrder, liveOrders []models.CreateLiveOrder) (models.Orders, error) {
+	var newOrder models.Orders
+
+	err := p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		orderId, err := utils.GenerateID()
 		if err != nil {
 			return err
@@ -28,7 +30,7 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, userID string, order mo
 
 		timeInSec := time.Now().Unix()
 
-		newOrder := models.Orders{
+		newOrder = models.Orders{
 			ID:          orderId,
 			UserID:      userID,
 			VendorID:    order.VendorID,
@@ -75,11 +77,19 @@ func (p *Repository) PlaceLiveOrder(ctx context.Context, userID string, order mo
 
 		return nil
 	})
+
+	if err != nil {
+		return models.Orders{}, err
+	}
+
+	return newOrder, nil
 }
 
-func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, userID string, order models.CreateOrder, subscription models.CreateSubscription) error {
+func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, userID string, order models.CreateOrder, subscription models.CreateSubscription) (models.Orders, error) {
 
-	return p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+	var newOrder models.Orders
+
+	err := p.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		orderId, err := utils.GenerateID()
 		if err != nil {
 			return err
@@ -87,7 +97,7 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, userID string, 
 
 		timeInSec := time.Now().Unix()
 
-		newOrder := models.Orders{
+		newOrder = models.Orders{
 			ID:          orderId,
 			UserID:      userID,
 			VendorID:    order.VendorID,
@@ -130,16 +140,33 @@ func (p *Repository) PlaceSubscriptionOrder(ctx context.Context, userID string, 
 
 		return nil
 	})
+
+	if err != nil {
+		return models.Orders{}, err
+	}
+
+	return newOrder, nil
 }
 
 func (p *Repository) CancelOrder(ctx context.Context, userID string, orderID string) error {
-	err := p.DB.WithContext(ctx).
-		Model(&models.Orders{}).
-		Where("id = ?", orderID).
-		Update("order_status", models.Cancelled).Error
-	if err != nil {
-		return err
+	if userID == "-1" {
+		err := p.DB.WithContext(ctx).
+			Model(&models.Orders{}).
+			Where("id = ?", orderID).
+			Update("order_status", models.Cancelled).Error
+		if err != nil {
+			return err
+		}
+	} else {
+		err := p.DB.WithContext(ctx).
+			Model(&models.Orders{}).
+			Where("id = ? AND user_id = ?", orderID, userID).
+			Update("order_status", models.Cancelled).Error
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 

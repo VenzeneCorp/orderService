@@ -17,12 +17,14 @@ func NewUserHistoryRepo(db *postgresdb.SQL) Repository {
 	}
 }
 
-func (r *UserHistoryRepo) PlaceLiveOrder(ctx context.Context, userID string, order models.CreateOrder, liveOrder []models.CreateLiveOrder) error {
-	return r.sqlDB.PlaceLiveOrder(ctx, userID, order, liveOrder)
+func (r *UserHistoryRepo) PlaceLiveOrder(ctx context.Context, userID string, order models.CreateOrder, liveOrder []models.CreateLiveOrder) (models.Orders, error) {
+	orders, err := r.sqlDB.PlaceLiveOrder(ctx, userID, order, liveOrder)
+	return orders, err
 }
 
-func (r *UserHistoryRepo) PlaceSubscriptionOrder(ctx context.Context, userID string, order models.CreateOrder, subscription models.CreateSubscription) error {
-	return r.sqlDB.PlaceSubscriptionOrder(ctx, userID, order, subscription)
+func (r *UserHistoryRepo) PlaceSubscriptionOrder(ctx context.Context, userID string, order models.CreateOrder, subscription models.CreateSubscription) (models.Orders, error) {
+	orders, err := r.sqlDB.PlaceSubscriptionOrder(ctx, userID, order, subscription)
+	return orders, err
 }
 
 func (r *UserHistoryRepo) CancelOrder(ctx context.Context, userID string, orderID string) error {
